@@ -10,13 +10,18 @@ if [[ $GRAFANA_INSTALL_DIR == *[' ''!''?'@#\$%^\&*()+]* ]]; then
     exit 1
 fi
 
+#### Grafana Related
+GRAFANA_LISTEN_PORT_ON_HOST=3000
+GRAFANA_DOWNLOAD_LINK="https://github.com/phison-dev/grafana_install_package_v2/releases/download/GIP_1.0.1/grafana.tar"
+OTEL_DOWNLOAD_LINK="https://github.com/phison-dev/grafana_install_package_v2/releases/download/GIP_1.0.1/otel.tar"
+TEMPO_DOWNLOAD_LINK="https://github.com/phison-dev/grafana_install_package_v2/releases/download/GIP_1.0.1/tempo.tar"
+
 #### Docker configure
 DOCKER_NETWORK="phison-network"
 DOCKER_COMPOSE_FILE="$GRAFANA_INSTALL_DIR/grafana-compose.yaml"
 DOCKER_CONFIG_ENV="$GRAFANA_INSTALL_DIR/grafana-config.env"
 DOCKER_IMAGE_ENV="$GRAFANA_INSTALL_DIR/grafana-image.env"
 DOCKER_COMPOSE_CLI="docker compose --env-file $DOCKER_CONFIG_ENV --env-file $DOCKER_IMAGE_ENV --file $DOCKER_COMPOSE_FILE"
-GRAFANA_LISTEN_PORT_ON_HOST=3000
 # Initialization function
 function init() {
     check_root
@@ -195,23 +200,34 @@ function uninstall() {
     LOG "info" "Finish uninstall Grafana."
 }
 
+function download_package(){
+	wget $GRAFANA_DOWNLOAD_LINK
+	wget $TEMPO_DOWNLOAD_LINK
+	wget $OTEL_DOWNLOAD_LINK
+	LOG "info" "Finish download Grafana-related image"
+}
+
 # Function to display menu options
 function display_menu() {
     echo "Select an option:"
-    printf "%-40s %-40s\n" " 0) Install Grafana" "Install Grafana-related packages."
-    printf "%-40s %-40s\n" " 1) Upgrade Grafana all services" "Upgrade Grafana to the previous installation package version."
-    printf "%-40s %-40s\n" " 2) Start Grafana all services" "Startup Grafana-related service."
-    printf "%-40s %-40s\n" " 3) Stop Grafana all services" "Stop Grafana-related service."
-    printf "%-40s %-40s\n" " 4) Restart Grafana all services" "Restart Grafana-related service."
-    printf "%-40s %-40s\n" " 5) Uninstall Grafana all services" "Stop and uninstall Grafana-related packages."
-    printf "%-40s %-40s\n" " 6) Exit Script" "Exit."
+    printf "%-40s %-40s\n" " 0) Download Grafana Packages" "Download Grafana-related docker packages."
+    printf "%-40s %-40s\n" " 1) Install Grafana" "Install Grafana-related packages."
+    printf "%-40s %-40s\n" " 2) Upgrade Grafana all services" "Upgrade Grafana to the previous installation package version."
+    printf "%-40s %-40s\n" " 3) Start Grafana all services" "Startup Grafana-related service."
+    printf "%-40s %-40s\n" " 4) Stop Grafana all services" "Stop Grafana-related service."
+    printf "%-40s %-40s\n" " 5) Restart Grafana all services" "Restart Grafana-related service."
+    printf "%-40s %-40s\n" " 6) Uninstall Grafana all services" "Stop and uninstall Grafana-related packages."
+    printf "%-40s %-40s\n" " 7) Exit Script" "Exit."
 }
 
 # Function to handle user selection
 function handle_selection() {
     local selectAction=$1
     case "$selectAction" in
-        0)
+		0)
+            download_package
+            ;;
+        1)
             ## Stop Grafana container if docker cli exist
             if command -v docker &> /dev/null; then
                 LOG "info" "Docker CLI exists, stopping Grafana container."
@@ -224,26 +240,26 @@ function handle_selection() {
             pull_docker_image
             dc_startup
             ;;
-        1)
+        2)
             uninstall "upgrade"
             pull_docker_image
             dc_startup
             ;;
-        2)
+        3)
             dc_startup
             ;;
-        3)
+        4)
             dc_stop
             ;;
-        4)
+        5)
             dc_stop
             sleep 5
             dc_startup
             ;;
-        5)
+        6)
             uninstall
             ;;
-        6)
+        7)
             LOG "Exiting script."
             exit 0
             ;;
