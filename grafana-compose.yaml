@@ -1,0 +1,68 @@
+networks:
+  phison-network:
+    external: true
+
+services:
+
+  grafana:
+    image: ${GRAFANA_CONTAINER_IMAGE}
+    container_name: grafana
+    networks:
+      - phison-network
+    ports:
+      - ${GRAFANA_LISTEN_PORT_ON_HOST}:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWD}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./config/grafana/datasource.yml:/etc/grafana/provisioning/datasources/main.yaml
+      - ./config/grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/main.yaml
+      - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./config/grafana/plugins:/var/lib/grafana/plugins
+      - ${GRAFANA_DATA_PATH}:/var/lib/grafana
+    env_file: 'grafana-config.env'
+    user: "root:root"
+
+  tempo_init:
+    image: ${TEMPO_CONTAINER_IMAGE}
+    container_name: tempo_init
+    user: root
+    entrypoint:
+      - "chown"
+      - "10001:10001"
+      - "/var/tempo"
+    volumes:
+      - ${TEMPO_DATA}:/var/tempo
+      
+  tempo:
+    image: ${TEMPO_CONTAINER_IMAGE}
+    container_name: tempo
+    networks:
+      - phison-network
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./config/tempo/tempo.yaml:/etc/tempo.yaml
+      - ${TEMPO_DATA}:/var/tempo
+    ports:
+      - 3200:3200
+      - 4317:4317
+      - 4318:4318
+    env_file: 'grafana-config.env'
+    depends_on:
+      - tempo_init
+
+  otel-collector:
+    image: ${OTEL_CONTAINER_IMAGE}
+    container_name: otel
+    command: [ "--config=/etc/otel-collector.yaml" ]
+    networks:
+      - phison-network
+    volumes:
+      - ./config/otel/otel-collector.yaml:/etc/otel-collector.yaml
+    depends_on:
+      - tempo
+

@@ -1,0 +1,48 @@
+apiVersion: 1
+
+datasources:
+- name: Prometheus
+  type: prometheus
+  url: http://prometheus:9090 
+  isDefault: true
+  access: proxy
+  editable: true
+
+- name: influxdb
+  type: influxdb
+  url: http://influxdb2:8086
+  isDefault: false
+  access: proxy
+  editable: true
+  basicAuth: true
+  basicAuthUser: phisonai
+  secureJsonData:
+    basicAuthPassword: "!phisonai"
+    token: "!phisonai"
+  jsonData:
+    version: Flux
+    organization: phisonai
+
+- name: Container State API
+  type: marcusolsson-json-datasource
+  typeName: "JSON API"
+  url: http://10.102.196.43:2375
+  isDefault: false
+  access: proxy
+  editable: true
+
+- name: marcusolsson-json-datasource
+  type: marcusolsson-json-datasource
+  typeName: "JSON API"
+  url: http://192.168.197.174:9400/gpu
+  isDefault: false
+  access: proxy
+  editable: true
+
+- name: tempo
+  type: tempo
+  url: http://tempo:3200
+  isDefault: false
+  access: proxy
+  editable: true
+  uid: P8D6546721A1D106C
