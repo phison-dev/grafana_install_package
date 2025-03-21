@@ -1,0 +1,1014 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 12,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select COUNT(kcmq.id) AS Correct_Response_Count  from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Number of Requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 1,
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "correct_response_count"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Correct"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "abnormal_responses_count"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Abnormal"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select COUNT(kcmq.id) AS Correct_Response_Count  from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand LENGTH(kcma.message) != 0 and (score != 1 or score is null )",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select COUNT(kcmq.id) AS Abnormal_Responses_Count  from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand (LENGTH(kcma.message) = 0 or kcma.message is NULL)",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Correct Reply Rate",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 0,
+          "fieldMinMax": false,
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 17,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_ConnetToAPI\")\r\n  |> group(columns: [\"serviceId\"], mode: \"by\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n  |> rename(columns: {_value: \"MS_ConnetToAPI\"})\r\n",
+          "refId": "MS_ConnetToAPI"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_ConnetToAPI_JIRA\")\r\n  |> group(columns: [\"serviceId\"], mode: \"by\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n  |> rename(columns: {_value: \"MS_ConnetToAPI_JIRA\"})\r\n",
+          "refId": "MS_ConnetToAPI_JIRA"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocGen_PPT\")\r\n  |> group(columns: [\"serviceId\"], mode: \"by\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n  |> rename(columns: {_value: \"MS_DocGen_PPT\"})\r\n",
+          "refId": "MS_DocGen_PPT"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocGen_WORD\")\r\n  |> group(columns: [\"serviceId\"], mode: \"by\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n  |> rename(columns: {_value: \"MS_DocGen_WORD\"})\r\n",
+          "refId": "MS_DocGen_WORD"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocumentAnalysis\")\r\n  |> group(columns: [\"serviceId\"], mode: \"by\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n  |> rename(columns: {_value: \"MS_DocumentAnalysis\"})\r\n",
+          "refId": "MS_DocumentAnalysis"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_TextToSQL\")\r\n  |> group(columns: [\"serviceId\"], mode: \"by\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n  |> rename(columns: {_value: \"MS_TextToSQL\"})\r\n",
+          "refId": "MS_TextToSQL"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_VoiceToText\")\r\n  |> group(columns: [\"serviceId\"], mode: \"by\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n  |> rename(columns: {_value: \"MS_VoiceToText\"})\r\n",
+          "refId": "MS_VoiceToText"
+        }
+      ],
+      "title": "🖥️ Usage Rate of vLLM Microservices",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#571a75",
+            "mode": "fixed"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "no_feedback"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "😐 No Feedback"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#506f9e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "likes"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "💖 Like"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#c15668",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dislike"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "💔 Dislike"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#5eaa80",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 8,
+        "x": 0,
+        "y": 8
+      },
+      "id": 18,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select COUNT(kcmq.id) as no_feedback from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand kcma.score is NULL",
+          "refId": "No Feedback",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select COUNT(kcmq.id) as likes from km_chat_message_question kcmq\r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand kcma.score = 5",
+          "refId": "Likes",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select COUNT(kcmq.id) as dislike from km_chat_message_question kcmq\r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand kcma.score = 1",
+          "refId": "Dislike",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Number of Feedbacks",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "description": "DAU : Daily Active Users  \n\nWAU : Weekly Active Users \n\nMAU : Monthly Active Users ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": -1,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dau"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "DAU"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wau"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "WAU"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mau"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "MAU"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 16,
+        "x": 8,
+        "y": 8
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select COUNT(distinct(kcrg.create_user)) as DAU, date_trunc('day',  kcmq.create_time) AS day_range from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  (now() - interval'30 days') AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= now() AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\ngroup by day_range\r\nORDER BY day_range",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select COUNT(distinct(kcrg.create_user)) as WAU, date_trunc('week',  kcmq.create_time) AS week_range from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  (now() - interval'30 days') AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= now() AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\ngroup by week_range\r\nORDER BY week_range",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select COUNT(distinct(kcrg.create_user)) as MAU, date_trunc('month',  kcmq.create_time) AS month_range from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  (now() - interval'30 days') AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= now() AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\ngroup by month_range\r\nORDER BY month_range",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "👤 Number of Active Users",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "issue_handle_count"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Request Handle Count"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "active_users"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Active Users"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Average Number of Interactions Per User"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.scaleDistribution",
+                "value": {
+                  "log": 2,
+                  "type": "log"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 16,
+        "x": 8,
+        "y": 17
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select COUNT(kcmq.id) as Issue_Handle_Count, TO_TIMESTAMP(TO_CHAR(kcmq.create_time - INTERVAL '8 hours', 'YYYY-MM-DD HH24:00:00'), 'YYYY-MM-DD HH24:MI:SS') AS HOUR from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\ngroup by TO_TIMESTAMP(TO_CHAR(kcmq.create_time - INTERVAL '8 hours', 'YYYY-MM-DD HH24:00:00'), 'YYYY-MM-DD HH24:MI:SS')\r\nORDER BY HOUR",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select COUNT(distinct(kcrg.create_user)) as Active_Users, TO_TIMESTAMP(TO_CHAR(kcmq.create_time-INTERVAL '8 hours' , 'YYYY-MM-DD HH24:00:00'), 'YYYY-MM-DD HH24:MI:SS')  AS HOUR from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\ngroup by  TO_TIMESTAMP(TO_CHAR(kcmq.create_time - INTERVAL '8 hours' , 'YYYY-MM-DD HH24:00:00'), 'YYYY-MM-DD HH24:MI:SS')\r\nORDER BY HOUR",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$A / $B",
+          "hide": false,
+          "refId": "Average Number of Interactions Per User",
+          "type": "math"
+        }
+      ],
+      "title": "📊 Active Users & AI Assistant Request Handling Statistics",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "ProSuite User Feedback Analysis",
+  "uid": "aedff8wa4vjeob",
+  "version": 132,
+  "weekStart": ""
+}

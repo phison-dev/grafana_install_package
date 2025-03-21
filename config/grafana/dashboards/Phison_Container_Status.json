@@ -24,9 +24,8 @@
   "description": "Dashboard with details of the container metrics and host OS metrics.",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": 15331,
   "graphTooltip": 1,
-  "id": 9,
+  "id": 8,
   "links": [],
   "panels": [
     {
@@ -80,6 +79,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -92,7 +92,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -132,6 +132,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -218,11 +219,12 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -443,7 +445,7 @@
           }
         ]
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -504,7 +506,7 @@
           "refId": "D"
         }
       ],
-      "title": "Docker Containers Infomation",
+      "title": "Docker Containers Information",
       "transformations": [
         {
           "id": "joinByField",
@@ -610,6 +612,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -668,11 +671,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -711,6 +715,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -797,11 +802,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -857,6 +863,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -915,11 +922,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -969,6 +977,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1027,11 +1036,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1068,23 +1078,27 @@
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
+        "current": {
+          "text": "${VAR_DATACENTER}",
+          "value": "${VAR_DATACENTER}"
+        },
         "hide": 2,
         "label": "datacenter",
         "name": "datacenter",
         "query": "${VAR_DATACENTER}",
-        "skipUrlSync": false,
+        "skipUrlSync": true,
         "type": "constant"
       },
       {
         "current": {
-          "selected": false,
-          "text": "None",
+          "text": "",
           "value": ""
         },
         "datasource": {
@@ -1092,9 +1106,7 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "",
-        "hide": 0,
         "includeAll": false,
-        "multi": false,
         "name": "environment",
         "options": [],
         "query": {
@@ -1103,19 +1115,11 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "query"
       },
       {
         "current": {
-          "selected": false,
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -1125,7 +1129,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "",
-        "hide": 0,
         "includeAll": true,
         "label": "Job",
         "multi": true,
@@ -1137,19 +1140,12 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "query"
       },
       {
         "current": {
-          "selected": false,
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -1159,7 +1155,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "",
-        "hide": 0,
         "includeAll": true,
         "label": "Node",
         "multi": true,
@@ -1171,22 +1166,18 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
-        "type": "query",
-        "useTags": false
+        "type": "query"
       },
       {
         "auto": false,
         "auto_count": 30,
         "auto_min": "10s",
         "current": {
-          "selected": false,
           "text": "1m",
           "value": "1m"
         },
         "description": "Time range interval",
-        "hide": 0,
         "label": "Interval",
         "name": "interval",
         "options": [
@@ -1223,15 +1214,11 @@
         ],
         "query": "1m,2m,3m,5m,10m,30m",
         "refresh": 2,
-        "skipUrlSync": false,
         "type": "interval"
       },
       {
         "current": {
-          "selected": false,
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -1241,7 +1228,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(container_memory_usage_bytes{name=~\"$containers\", instance=~\"$node\"}, id)",
-        "hide": 0,
         "includeAll": true,
         "label": "ID",
         "multi": true,
@@ -1253,16 +1239,11 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": false,
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -1272,7 +1253,6 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(container_memory_usage_bytes{instance=~\"$node\"}, name)",
-        "hide": 0,
         "includeAll": true,
         "label": "Containers",
         "multi": true,
@@ -1284,8 +1264,6 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       }
     ]
@@ -1294,34 +1272,10 @@
     "from": "now-15m",
     "to": "now"
   },
-  "timepicker": {
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m",
-      "5m",
-      "15m",
-      "30m",
-      "1h",
-      "2h",
-      "1d"
-    ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ]
-  },
+  "timepicker": {},
   "timezone": "browser",
   "title": "Docker Container Dashboard",
   "uid": "WAg1n_Inz",
-  "version": 29,
+  "version": 3,
   "weekStart": ""
 }

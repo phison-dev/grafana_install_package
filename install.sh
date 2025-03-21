@@ -12,7 +12,7 @@ fi
 
 #### Grafana Related
 GRAFANA_LISTEN_PORT_ON_HOST=3000
-VERSION_TAG=GIP_1.2.0
+VERSION_TAG=GIP_1.3.0
 GRAFANA_DOWNLOAD_LINK="https://github.com/phison-dev/grafana_install_package_v2/releases/download/$VERSION_TAG/grafana.tar"
 OTEL_DOWNLOAD_LINK="https://github.com/phison-dev/grafana_install_package_v2/releases/download/$VERSION_TAG/otel.tar"
 TEMPO_DOWNLOAD_LINK="https://github.com/phison-dev/grafana_install_package_v2/releases/download/$VERSION_TAG/tempo.tar"

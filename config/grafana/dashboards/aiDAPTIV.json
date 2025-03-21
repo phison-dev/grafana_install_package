@@ -23,514 +23,6 @@
   "panels": [
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 2,
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "light-blue",
-                "value": 5
-              },
-              {
-                "color": "#EF843C",
-                "value": 10
-              },
-              {
-                "color": "red",
-                "value": 20
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 0,
-        "y": 0
-      },
-      "id": 16,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.3.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "$ErrorFlowCount/$FlowCount*100",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Error Flow Rate",
-      "transparent": true,
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "series",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 45,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 3,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "always",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "A"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "MAU"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "B"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "WAU"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "C"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "DAU"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 7,
-        "x": 4,
-        "y": 0
-      },
-      "id": 17,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Name",
-          "sortDesc": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.3.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: -30d)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"userId\"] != \"\")   \r\n  |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n  |> group(columns: [\"userId\"], mode: \"by\")\r\n  |> unique(column:\"userId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> aggregateWindow(every: 30m, fn: sum)\r\n  |> cumulativeSum(columns: [\"_value\"]) \r\n",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: -7d, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"userId\"] != \"\")   \r\n  |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n  |> group(columns: [\"userId\"], mode: \"by\")\r\n  |> unique(column:\"userId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> aggregateWindow(every: 30m, fn: sum)\r\n  |> cumulativeSum(columns: [\"_value\"]) \r\n",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: -1d, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"userId\"] != \"\")   \r\n  |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n  |> group(columns: [\"userId\"], mode: \"by\")\r\n  |> unique(column:\"userId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> aggregateWindow(every: 30m, fn: sum)\r\n  |> cumulativeSum(columns: [\"_value\"]) \r\n",
-          "refId": "C"
-        }
-      ],
-      "title": "Active Users",
-      "transparent": true,
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "series",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 11,
-        "y": 0
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.3.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"userId\"] != \"\")   \r\n  |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n  |> group(columns: [\"userId\"], mode: \"by\")\r\n  |> unique(column:\"userId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> cumulativeSum(columns: [\"_value\"]) \r\n  |> aggregateWindow(every: 20m, fn: count)",
-          "refId": "A"
-        }
-      ],
-      "title": "User Count Record",
-      "transparent": true,
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "series",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 0
-      },
-      "id": 3,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.3.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> cumulativeSum(columns: [\"_value\"]) \r\n  |> aggregateWindow(every: 20m, fn: count)",
-          "refId": "A"
-        }
-      ],
-      "title": "Flow Count Record",
-      "transparent": true,
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 0,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 0,
-        "y": 3
-      },
-      "id": 18,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.3.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "$FlowCount/$UserCount",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Average Flow Count of Users",
-      "transparent": true,
-      "type": "stat"
-    },
-    {
-      "datasource": {
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
@@ -1028,10 +520,10 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 0
       },
       "id": 1,
-      "maxDataPoints": 50000,
+      "maxDataPoints": 500000,
       "options": {
         "cellHeight": "md",
         "footer": {
@@ -1052,7 +544,7 @@
           }
         ]
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1063,7 +555,7 @@
           "refId": "A"
         }
       ],
-      "title": "aiDAPTIV Log Record",
+      "title": "aiDAPTIV Log Monitor",
       "transformations": [
         {
           "id": "organize",
@@ -1100,7 +592,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 11
       },
       "id": 13,
       "panels": [],
@@ -1207,7 +699,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 12
       },
       "id": 14,
       "options": {
@@ -1223,7 +715,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1238,7 +730,7 @@
             }
           ],
           "limit": 20,
-          "query": "{name=\"${FlowID}\"}",
+          "query": "{name=~\"${FlowID:regex}\"}",
           "queryType": "traceql",
           "refId": "A",
           "spss": 10,
@@ -1292,7 +784,7 @@
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 18
       },
       "id": 15,
       "options": {
@@ -1319,7 +811,7 @@
         "sizing": "auto",
         "valueMode": "color"
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1327,7 +819,7 @@
             "uid": "P8D6546721A1D106C"
           },
           "limit": 20,
-          "query": "{name=\"${FlowID}\"}",
+          "query": "{name=~\"${FlowID:regex}\"}",
           "queryType": "traceql",
           "refId": "A",
           "tableType": "traces"
@@ -1374,7 +866,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 21
       },
       "id": 12,
       "panels": [],
@@ -1383,10 +875,429 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
       },
-      "description": "Number of tokens processed per second",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 50,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "pointShape": "circle",
+            "pointSize": {
+              "fixed": 4
+            },
+            "pointStrokeWidth": 1,
+            "scaleDistribution": {
+              "log": 2,
+              "type": "symlog"
+            },
+            "show": "points"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_value"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "displayName",
+                "value": "Duration"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalTokens"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Total Tokens"
+              }
+            ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Duration"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "mapping": "manual",
+        "series": [
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 0
+              }
+            },
+            "name": {
+              "fixed": "Dispatcher"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          },
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 1
+              }
+            },
+            "name": {
+              "fixed": "ProSuite"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          },
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 2
+              }
+            },
+            "name": {
+              "fixed": "MS_DocGen_PPT"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          },
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 3
+              }
+            },
+            "name": {
+              "fixed": "MS_DocumentAnalysis"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          },
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 4
+              }
+            },
+            "name": {
+              "fixed": "MS_RAG"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          },
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 5
+              }
+            },
+            "name": {
+              "fixed": "MS_TextToSQL"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          },
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 6
+              }
+            },
+            "name": {
+              "fixed": "MS_VoiceToText"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          },
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 7
+              }
+            },
+            "name": {
+              "fixed": "MS_ConnetToAPI_JIRA"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          },
+          {
+            "frame": {
+              "matcher": {
+                "id": "byIndex",
+                "options": 8
+              }
+            },
+            "name": {
+              "fixed": "MS_DocGen_WORD"
+            },
+            "x": {
+              "matcher": {
+                "id": "byName",
+                "options": "totalTokens"
+              }
+            },
+            "y": {
+              "matcher": {
+                "id": "byName",
+                "options": "_value"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"Dispatcher\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "Dispatcher"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"ProSuite\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "ProSuite"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocGen_PPT\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "MS_DocGen_PPT"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocumentAnalysis\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "MS_DocumentAnalysis"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_RAG\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "MS_RAG"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_TextToSQL\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "MS_TextToSQL"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_VoiceToText\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "MS_VoiceToText"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_ConnetToAPI_JIRA\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "MS_ConnetToAPI_JIRA"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocGen_WORD\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "refId": "MS_DocGen_WORD"
+        }
+      ],
+      "title": "Token Length vs. Request Latency",
+      "type": "xychart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1438,6 +1349,435 @@
                 "value": 80
               }
             ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tokenCount"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Token Count"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serviceId"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Service ID"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "flowId"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Flow ID"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> group(columns: [\"serviceId\"])\r\n  |> keep(columns: [\"_time\",\"serviceId\",\"_value\"])\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Request Latency vs. Time",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "_time": 0,
+              "_value": 4,
+              "flowId": 3,
+              "serviceId": 1,
+              "tokenCount": 2
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalTokens"
+            },
+            "properties": [
+              {
+                "id": "displayName"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> map(fn: (r) => ({ r with TotalTokens_: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"_time\",\"serviceId\",\"TotalTokens_\"])\r\n  |> group(columns: [\"serviceId\"])\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Token Length vs. Time",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "_value": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "_time": 0,
+              "_value": 4,
+              "flowId": 3,
+              "serviceId": 1,
+              "tokenCount": 2
+            },
+            "renameByName": {}
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "tokenCount"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "description": "Percentage of used cache blocks by vLLM.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 26,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "vllm:gpu_cache_usage_perc{model_name=\"$model_name\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": false,
+          "instant": false,
+          "legendFormat": "GPU Cache Usage",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "vllm:cpu_cache_usage_perc{model_name=\"$model_name\"}",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": false,
+          "instant": false,
+          "legendFormat": "CPU Cache Usage",
+          "range": true,
+          "refId": "B",
+          "useBackend": false
+        }
+      ],
+      "title": "Cache Utilization",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "description": "Number of tokens processed per second",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
           }
         },
         "overrides": []
@@ -1446,7 +1786,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 38
       },
       "id": 10,
       "options": {
@@ -1457,11 +1797,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1498,6 +1839,342 @@
         }
       ],
       "title": "Token Throughput",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_value"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Duration"
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tokenCount"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Token Count"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "auto"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serviceId"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Service ID"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "flowId"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Flow ID"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> cumulativeSum(columns: [\"_value\"]) \r\n  |> aggregateWindow(every: 5m, fn: count)",
+          "refId": "A"
+        }
+      ],
+      "title": "Request_count vs. Time",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "_value": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "_time": 0,
+              "_value": 4,
+              "flowId": 3,
+              "serviceId": 1,
+              "tokenCount": 2
+            },
+            "renameByName": {
+              "Value": "Request Count"
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "tokenCount"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "description": "Number of requests in RUNNING, WAITING, and SWAPPED state",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 46
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "vllm:num_requests_running{model_name=\"$model_name\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": false,
+          "instant": false,
+          "legendFormat": "Num Running",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "vllm:num_requests_swapped{model_name=\"$model_name\"}",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": false,
+          "instant": false,
+          "legendFormat": "Num Swapped",
+          "range": true,
+          "refId": "B",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "vllm:num_requests_waiting{model_name=\"$model_name\"}",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Num Waiting",
+          "range": true,
+          "refId": "C",
+          "useBackend": false
+        }
+      ],
+      "title": "Scheduler State",
       "type": "timeseries"
     },
     {
@@ -1549,8 +2226,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1566,7 +2242,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 46
       },
       "id": 11,
       "options": {
@@ -1577,11 +2253,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1673,12 +2350,120 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 54
       },
       "id": 5,
       "panels": [],
       "title": "Basic Hardware Information",
       "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 55
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "asc"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "nvidia_gpu_utilization_by_card{cardMinor=~\"$GPU\"}",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{node}}-{{cardMinor}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "GPU Utilization",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -1731,8 +2516,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1854,7 +2638,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 37
+        "y": 63
       },
       "id": 6,
       "options": {
@@ -1866,11 +2650,12 @@
           "width": 250
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -2015,8 +2800,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2400,7 +3184,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 37
+        "y": 63
       },
       "id": 7,
       "options": {
@@ -2412,11 +3196,12 @@
           "width": 350
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -2533,8 +3318,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2623,7 +3407,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 44
+        "y": 70
       },
       "id": 9,
       "options": {
@@ -2639,11 +3423,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -2725,8 +3510,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2742,7 +3526,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 44
+        "y": 70
       },
       "id": 8,
       "options": {
@@ -2753,11 +3537,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -2784,9 +3569,7 @@
     "list": [
       {
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -2800,7 +3583,10 @@
         "multi": true,
         "name": "Service",
         "options": [],
-        "query": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(\r\n    bucket: \"phisonai\",\r\n    tag: \"serviceId\",\r\n    predicate: (r) => r._measurement == \"n_log\",\r\n    start: v.timeRangeStart,\r\n    stop:v.timeRangeStop\r\n)",
+        "query": {
+          "query": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(\r\n    bucket: \"phisonai\",\r\n    tag: \"serviceId\",\r\n    predicate: (r) => r._measurement == \"n_log\",\r\n    start: v.timeRangeStart,\r\n    stop:v.timeRangeStop\r\n)",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
         "refresh": 1,
         "regex": "",
         "type": "query"
@@ -2815,6 +3601,7 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(node_uname_info{job=\"$job\"},instance)",
+        "hide": 2,
         "includeAll": false,
         "label": "Host",
         "name": "node",
@@ -2830,6 +3617,7 @@
         "type": "query"
       },
       {
+        "allValue": "[^ \\t\\n]+",
         "current": {
           "text": "All",
           "value": "$__all"
@@ -2839,17 +3627,19 @@
           "uid": "P3C6603E967DC8568"
         },
         "definition": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column: \"flowId\")\r\n  |> map(fn: (r) => ({flowId: r.flowId}))",
+        "description": "",
         "includeAll": true,
         "label": "Flow ID",
         "name": "FlowID",
         "options": [],
         "query": {
-          "maxDataPoints": 200000,
+          "maxDataPoints": 50000,
           "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column: \"flowId\")\r\n  |> map(fn: (r) => ({flowId: r.flowId}))",
           "refId": "InfluxVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
         "regex": "",
+        "sort": 2,
         "type": "query"
       },
       {
@@ -2883,9 +3673,7 @@
       },
       {
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -2918,6 +3706,7 @@
           "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(node_uname_info,job)",
+        "hide": 2,
         "includeAll": false,
         "label": "Job",
         "name": "job",
@@ -2937,6 +3726,7 @@
           "text": "Prometheus",
           "value": "PBFA97CFB590B2093"
         },
+        "hide": 2,
         "includeAll": false,
         "label": "Datasource",
         "name": "datasource",
@@ -2948,8 +3738,8 @@
       },
       {
         "current": {
-          "text": "InferenceModel1",
-          "value": "InferenceModel1"
+          "text": "InferenceModel4",
+          "value": "InferenceModel4"
         },
         "datasource": {
           "type": "prometheus",
@@ -2984,7 +3774,10 @@
         "label": "Time To",
         "name": "TimeTo",
         "options": [],
-        "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"flowId\"] == \"${FlowID}\")\r\n  |> last()\r\n  |> keep(columns: [\"_time\"])\r\n    |> map(fn: (r) => ({ r with _time: int(v: r._time)/1000000+600000}))\r\n",
+        "query": {
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"flowId\"] == \"${FlowID}\")\r\n  |> last()\r\n  |> keep(columns: [\"_time\"])\r\n    |> map(fn: (r) => ({ r with _time: int(v: r._time)/1000000+600000}))\r\n",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
         "refresh": 2,
         "regex": "",
         "type": "query"
@@ -3004,15 +3797,18 @@
         "label": "Time From",
         "name": "TimeFrom",
         "options": [],
-        "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"flowId\"] == \"${FlowID}\")\r\n  |> first()\r\n  |> keep(columns: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _time: int(v: r._time)/1000000-600000}))",
+        "query": {
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"flowId\"] == \"${FlowID}\")\r\n  |> first()\r\n  |> keep(columns: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _time: int(v: r._time)/1000000-600000}))",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
         "refresh": 1,
         "regex": "",
         "type": "query"
       },
       {
         "current": {
-          "text": "",
-          "value": ""
+          "text": "25",
+          "value": "25"
         },
         "datasource": {
           "type": "influxdb",
@@ -3024,15 +3820,18 @@
         "label": "Error Flow Count",
         "name": "ErrorFlowCount",
         "options": [],
-        "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> filter(fn: (r) => r[\"level\"] == \"Error\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
+        "query": {
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> filter(fn: (r) => r[\"level\"] == \"Error\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
         "refresh": 2,
         "regex": "",
         "type": "query"
       },
       {
         "current": {
-          "text": "63",
-          "value": "63"
+          "text": "1450",
+          "value": "1450"
         },
         "datasource": {
           "type": "influxdb",
@@ -3044,15 +3843,18 @@
         "label": "Flow Count",
         "name": "FlowCount",
         "options": [],
-        "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
+        "query": {
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
         "refresh": 2,
         "regex": "",
         "type": "query"
       },
       {
         "current": {
-          "text": "2",
-          "value": "2"
+          "text": "49",
+          "value": "49"
         },
         "datasource": {
           "type": "influxdb",
@@ -3064,7 +3866,10 @@
         "label": "User Count",
         "name": "UserCount",
         "options": [],
-        "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"userId\"] != \"\")\r\n  |> group(columns: [\"userId\"], mode: \"by\")\r\n  |> unique(column:\"userId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
+        "query": {
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"userId\"] != \"\")\r\n  |> group(columns: [\"userId\"], mode: \"by\")\r\n  |> unique(column:\"userId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
         "refresh": 2,
         "regex": "",
         "type": "query"
@@ -3079,6 +3884,6 @@
   "timezone": "browser",
   "title": "aiDAPTIV Log Storage",
   "uid": "ce17eqzfyebk0a",
-  "version": 104,
+  "version": 116,
   "weekStart": ""
 }
