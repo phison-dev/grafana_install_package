@@ -570,12 +570,13 @@
               "_time": 0,
               "_value": 8,
               "callSite": 7,
+              "errorCode": 9,
               "flowId": 4,
               "ip": 6,
               "level": 1,
               "serviceId": 2,
-              "t_end": 10,
-              "t_start": 9,
+              "t_end": 11,
+              "t_start": 10,
               "userId": 5,
               "version": 3
             },
@@ -949,30 +950,6 @@
                 "value": "Total Tokens"
               }
             ]
-          },
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Duration"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
           }
         ]
       },
@@ -1214,7 +1191,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"Dispatcher\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"Dispatcher\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "Dispatcher"
         },
         {
@@ -1223,7 +1200,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"ProSuite\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"ProSuite\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "ProSuite"
         },
         {
@@ -1232,7 +1209,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocGen_PPT\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocGen_PPT\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "MS_DocGen_PPT"
         },
         {
@@ -1241,7 +1218,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocumentAnalysis\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocumentAnalysis\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "MS_DocumentAnalysis"
         },
         {
@@ -1250,7 +1227,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_RAG\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_RAG\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "MS_RAG"
         },
         {
@@ -1259,7 +1236,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_TextToSQL\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_TextToSQL\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "MS_TextToSQL"
         },
         {
@@ -1268,7 +1245,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_VoiceToText\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_VoiceToText\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "MS_VoiceToText"
         },
         {
@@ -1277,7 +1254,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_ConnetToAPI_JIRA\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_ConnetToAPI_JIRA\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "MS_ConnetToAPI_JIRA"
         },
         {
@@ -1286,7 +1263,7 @@
             "uid": "P3C6603E967DC8568"
           },
           "hide": false,
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocGen_WORD\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> filter(fn: (r) => r[\"serviceId\"] == \"MS_DocGen_WORD\")\r\n  |> map(fn: (r) => ({ r with totalTokens: int(v: r.promptTokens)+int(v: r.completionTokens)}))\r\n  |> keep(columns: [\"serviceId\",\"totalTokens\",\"_value\"])\r\n  |>group()",
           "refId": "MS_DocGen_WORD"
         }
       ],
@@ -1430,7 +1407,7 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> group(columns: [\"serviceId\"])\r\n  |> keep(columns: [\"_time\",\"serviceId\",\"_value\"])\r\n\r\n",
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"vllm_loading\")\r\n  |> filter(fn: (r) => r.model =~ /^${Model:regex}$/)\r\n  |> group(columns: [\"serviceId\"])\r\n  |> keep(columns: [\"_time\",\"serviceId\",\"_value\"])\r\n\r\n",
           "refId": "A"
         }
       ],
@@ -1502,7 +1479,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1651,7 +1629,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1771,7 +1750,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1890,7 +1870,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2090,7 +2071,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2226,7 +2208,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2345,12 +2328,288 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "description": "Average response time for questions and answers",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Average Response Time"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "color"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 54
+      },
+      "id": 28,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "select  SUM(EXTRACT(EPOCH FROM age(kcma.create_time,kcmq.create_time))) AS Response_Time_Sum  from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcma.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand LENGTH(kcma.message) != 0 and (score != 1 or score is null )",
+          "refId": "Response_Time_Sum",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "select count(kcmq.id) AS Question_Count  from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcma.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand LENGTH(kcma.message) != 0 and (score != 1 or score is null )",
+          "refId": "Question_Count",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "$Response_Time_Sum/$Question_Count",
+          "hide": false,
+          "refId": "Average Response Time",
+          "type": "math"
+        }
+      ],
+      "title": "⏱︎ Average Response Time",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "description": "Distribution of response time for questions and answers",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#3c4c7d",
+            "mode": "fixed"
+          },
+          "custom": {
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 4,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "response_time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Count"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 54
+      },
+      "id": 29,
+      "options": {
+        "bucketCount": 150,
+        "combine": false,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select  (EXTRACT(EPOCH FROM age(kcma.create_time,kcmq.create_time))) AS Response_Time\r\nfrom km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcma.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand LENGTH(kcma.message) != 0 and (score != 1 or score is null ) and (EXTRACT(EPOCH FROM age(kcma.create_time,kcmq.create_time)))>0",
+          "refId": "Response_Time_Sum",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Response Time Distribution",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "histogram"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 62
       },
       "id": 5,
       "panels": [],
@@ -2410,7 +2669,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2426,7 +2686,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 55
+        "y": 63
       },
       "id": 23,
       "options": {
@@ -2516,7 +2776,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2638,7 +2899,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 63
+        "y": 71
       },
       "id": 6,
       "options": {
@@ -2800,7 +3061,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3184,7 +3446,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 63
+        "y": 71
       },
       "id": 7,
       "options": {
@@ -3318,7 +3580,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3407,7 +3670,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 70
+        "y": 78
       },
       "id": 9,
       "options": {
@@ -3510,7 +3773,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3526,7 +3790,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 70
+        "y": 78
       },
       "id": 8,
       "options": {
@@ -3644,35 +3908,6 @@
       },
       {
         "current": {
-          "text": [
-            "Pro_Suite"
-          ],
-          "value": [
-            "Pro_Suite"
-          ]
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
-        },
-        "definition": "label_values(nvidia_gpu_info,node)",
-        "includeAll": true,
-        "label": "GPU Node",
-        "multi": true,
-        "name": "GPU_Node",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(nvidia_gpu_info,node)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "sort": 2,
-        "type": "query"
-      },
-      {
-        "current": {
           "text": "All",
           "value": [
             "$__all"
@@ -3747,7 +3982,7 @@
         },
         "definition": "label_values(model_name)",
         "includeAll": false,
-        "label": "Model Name",
+        "label": "Model Code Name",
         "name": "model_name",
         "options": [],
         "query": {
@@ -3761,116 +3996,22 @@
       },
       {
         "current": {
-          "text": "",
-          "value": ""
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "influxdb",
           "uid": "P3C6603E967DC8568"
         },
-        "definition": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"flowId\"] == \"${FlowID}\")\r\n  |> last()\r\n  |> keep(columns: [\"_time\"])\r\n    |> map(fn: (r) => ({ r with _time: int(v: r._time)/1000000+600000}))\r\n",
-        "hide": 2,
-        "includeAll": false,
-        "label": "Time To",
-        "name": "TimeTo",
+        "definition": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(\r\n    bucket: \"phisonai\",\r\n    tag: \"model\",\r\n    predicate: (r) => r._measurement == \"vllm_loading\",\r\n    start: v.timeRangeStart,\r\n    stop:v.timeRangeStop\r\n)",
+        "includeAll": true,
+        "label": "Model Name",
+        "name": "Model",
         "options": [],
         "query": {
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"flowId\"] == \"${FlowID}\")\r\n  |> last()\r\n  |> keep(columns: [\"_time\"])\r\n    |> map(fn: (r) => ({ r with _time: int(v: r._time)/1000000+600000}))\r\n",
-          "refId": "InfluxVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "type": "query"
-      },
-      {
-        "current": {
-          "text": "",
-          "value": ""
-        },
-        "datasource": {
-          "type": "influxdb",
-          "uid": "P3C6603E967DC8568"
-        },
-        "definition": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"flowId\"] == \"${FlowID}\")\r\n  |> first()\r\n  |> keep(columns: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _time: int(v: r._time)/1000000-600000}))",
-        "hide": 2,
-        "includeAll": false,
-        "label": "Time From",
-        "name": "TimeFrom",
-        "options": [],
-        "query": {
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"flowId\"] == \"${FlowID}\")\r\n  |> first()\r\n  |> keep(columns: [\"_time\"])\r\n  |> map(fn: (r) => ({ r with _time: int(v: r._time)/1000000-600000}))",
-          "refId": "InfluxVariableQueryEditor-VariableQuery"
+          "query": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(\r\n    bucket: \"phisonai\",\r\n    tag: \"model\",\r\n    predicate: (r) => r._measurement == \"vllm_loading\",\r\n    start: v.timeRangeStart,\r\n    stop:v.timeRangeStop\r\n)"
         },
         "refresh": 1,
-        "regex": "",
-        "type": "query"
-      },
-      {
-        "current": {
-          "text": "25",
-          "value": "25"
-        },
-        "datasource": {
-          "type": "influxdb",
-          "uid": "P3C6603E967DC8568"
-        },
-        "definition": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> filter(fn: (r) => r[\"level\"] == \"Error\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
-        "hide": 2,
-        "includeAll": false,
-        "label": "Error Flow Count",
-        "name": "ErrorFlowCount",
-        "options": [],
-        "query": {
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> filter(fn: (r) => r[\"level\"] == \"Error\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
-          "refId": "InfluxVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "type": "query"
-      },
-      {
-        "current": {
-          "text": "1450",
-          "value": "1450"
-        },
-        "datasource": {
-          "type": "influxdb",
-          "uid": "P3C6603E967DC8568"
-        },
-        "definition": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
-        "hide": 2,
-        "includeAll": false,
-        "label": "Flow Count",
-        "name": "FlowCount",
-        "options": [],
-        "query": {
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column:\"flowId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
-          "refId": "InfluxVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "type": "query"
-      },
-      {
-        "current": {
-          "text": "49",
-          "value": "49"
-        },
-        "datasource": {
-          "type": "influxdb",
-          "uid": "P3C6603E967DC8568"
-        },
-        "definition": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"userId\"] != \"\")\r\n  |> group(columns: [\"userId\"], mode: \"by\")\r\n  |> unique(column:\"userId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
-        "hide": 2,
-        "includeAll": false,
-        "label": "User Count",
-        "name": "UserCount",
-        "options": [],
-        "query": {
-          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"userId\"] != \"\")\r\n  |> group(columns: [\"userId\"], mode: \"by\")\r\n  |> unique(column:\"userId\")\r\n  |> map(fn: (r) => ({_time: r._time, _value: 1}))\r\n  |> sum()\r\n",
-          "refId": "InfluxVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
         "regex": "",
         "type": "query"
       }
@@ -3884,6 +4025,6 @@
   "timezone": "browser",
   "title": "aiDAPTIV Log Storage",
   "uid": "ce17eqzfyebk0a",
-  "version": 116,
+  "version": 128,
   "weekStart": ""
 }

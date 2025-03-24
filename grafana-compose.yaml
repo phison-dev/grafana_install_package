@@ -11,7 +11,7 @@ services:
       - phison-network
     ports:
       - ${GRAFANA_LISTEN_PORT_ON_HOST}:3000
-    restart: unless-stopped
+    restart: always
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWD}
@@ -51,6 +51,7 @@ services:
       - 3200:3200
       - 4317:4317
       - 4318:4318
+    restart: always
     env_file: 'grafana-config.env'
     depends_on:
       - tempo_init
@@ -61,6 +62,7 @@ services:
     command: [ "--config=/etc/otel-collector.yaml" ]
     networks:
       - phison-network
+    restart: always
     volumes:
       - ./config/otel/otel-collector.yaml:/etc/otel-collector.yaml
     depends_on:

@@ -197,7 +197,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "select COUNT(kcmq.id) AS Correct_Response_Count  from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand LENGTH(kcma.message) != 0 and (score != 1 or score is null )",
+          "rawSql": "select COUNT(kcmq.id) AS Correct_Response_Count  from km_chat_message_question kcmq \r\nleft join km_chat_message_answer kcma\r\non kcmq.id  = kcma.que_id\r\nleft join km_chat_room kcr \r\non kcmq.room_id = kcr.id\r\nleft join km_chat_room_group kcrg \r\non kcr.group_id = kcrg.id \r\nwhere kcmq.create_time >=  $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' AND kcmq.create_time <= $__timeTo()  AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\nand LENGTH(kcma.message) != 0",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1009,6 +1009,6 @@
   "timezone": "browser",
   "title": "ProSuite User Feedback Analysis",
   "uid": "aedff8wa4vjeob",
-  "version": 132,
+  "version": 134,
   "weekStart": ""
 }
