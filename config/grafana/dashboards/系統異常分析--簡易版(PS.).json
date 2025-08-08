@@ -1,0 +1,1056 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 20,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 95
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total_response_count"
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "total question#"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 1
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "hidden"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "correct_response_count"
+            },
+            "properties": [
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "displayName",
+                "value": "w/ response#"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 1
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "hidden"
+              },
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "abnormal_response_count"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "wo/ response#"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 1
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "hidden"
+              },
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": true,
+                  "tooltip": false,
+                  "viz": false
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "response_rate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 51,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    DATE(kcmq.create_time) AS response_date,\r\n    COUNT(CASE \r\n            WHEN LENGTH(kcma.message) != 0 \r\n                 AND kcma.abnormal = false \r\n                 AND kcma.message != 'prosuite-user-canceled' \r\n            THEN kcmq.id \r\n            ELSE NULL \r\n          END) AS Correct_Response_Count,\r\n    COUNT(kcma.id) AS Total_Response_Count,\r\n    CASE \r\n        WHEN COUNT(kcma.id) = 0 THEN 0\r\n        ELSE (COUNT(CASE \r\n                      WHEN LENGTH(kcma.message) != 0 \r\n                           AND kcma.abnormal = false \r\n                           AND kcma.message != 'prosuite-user-canceled' \r\n                      THEN kcmq.id \r\n                      ELSE NULL \r\n                    END) * 100.0 / COUNT(kcma.id))\r\n    END AS Response_Rate,\r\n    COUNT(CASE \r\n            WHEN LENGTH(kcma.message) != 0 \r\n                 AND kcma.abnormal = true \r\n                 AND kcma.message != 'prosuite-user-canceled' \r\n            THEN kcmq.id \r\n            ELSE NULL \r\n          END) AS Abnormal_Response_Count\r\n        \r\nFROM km_chat_message_question kcmq \r\nLEFT JOIN km_chat_message_answer kcma\r\n    ON kcmq.id = kcma.que_id\r\nLEFT JOIN km_chat_room kcr \r\n    ON kcmq.room_id = kcr.id\r\nLEFT JOIN km_chat_room_group kcrg \r\n    ON kcr.group_id = kcrg.id \r\nWHERE kcmq.create_time >= $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' \r\n    AND kcmq.create_time <= $__timeTo() AT TIME ZONE 'UTC' + INTERVAL '8 hours' \r\nGROUP BY DATE(kcmq.create_time)\r\nORDER BY response_date;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Response# Monitor",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P8D6546721A1D106D"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "log": 2,
+              "type": "log"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max_value"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "median_value"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "percentile_95_value"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    DATE_TRUNC('week', kcmq.create_time) AS day,\r\n    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM age(kcma.create_time, kcmq.create_time))) AS median_value\r\nFROM \r\n    km_chat_message_question kcmq \r\nLEFT JOIN \r\n    km_chat_message_answer kcma ON kcmq.id = kcma.que_id\r\nWHERE \r\n    kcmq.create_time >= $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' \r\n    AND kcma.create_time <= $__timeTo() AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\n    AND LENGTH(kcma.message) != 0 \r\n    AND kcmq.flow_id != ''\r\nGROUP BY \r\n    day\r\nORDER BY \r\n    day;",
+          "refId": "median_value",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    DATE_TRUNC('week', kcmq.create_time) AS day,\r\n    MAX(EXTRACT(EPOCH FROM age(kcma.create_time, kcmq.create_time))) AS max_value\r\nFROM \r\n    km_chat_message_question kcmq \r\nLEFT JOIN \r\n    km_chat_message_answer kcma ON kcmq.id = kcma.que_id\r\nWHERE \r\n    kcmq.create_time >= $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' \r\n    AND kcma.create_time <= $__timeTo() AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\n    AND LENGTH(kcma.message) != 0 \r\n    AND kcmq.flow_id != ''\r\nGROUP BY \r\n    day\r\nORDER BY \r\n    day;",
+          "refId": "max_value",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P8D6546721A1D106D"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \r\n    DATE_TRUNC('week', kcmq.create_time) AS day,\r\n    PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM age(kcma.create_time, kcmq.create_time))) AS percentile_95_value\r\nFROM \r\n    km_chat_message_question kcmq \r\nLEFT JOIN \r\n    km_chat_message_answer kcma ON kcmq.id = kcma.que_id\r\nWHERE \r\n    kcmq.create_time >= $__timeFrom() AT TIME ZONE 'UTC' + INTERVAL '8 hours' \r\n    AND kcma.create_time <= $__timeTo() AT TIME ZONE 'UTC' + INTERVAL '8 hours'\r\n    AND LENGTH(kcma.message) != 0 \r\n    AND kcmq.flow_id != ''\r\nGROUP BY \r\n    day\r\nORDER BY \r\n    day;",
+          "refId": "percentile_95_value",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Response Time Trend (by week)",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "trend"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "applyToRow": false,
+                  "mode": "gradient",
+                  "type": "color-background",
+                  "wrapText": false
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "Decreased": {
+                        "color": "green",
+                        "index": 0
+                      },
+                      "Increased": {
+                        "color": "red",
+                        "index": 1
+                      },
+                      "No Change": {
+                        "color": "#a9a9ad",
+                        "index": 2
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 92
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "selected_range_median"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "median#(selected-date) /hr"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "this_week_median"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "median#(-7day) /hr"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "this_week_total"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "total error#(-7day)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "errorCode"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "",
+                    "url": "d/ce17eqzfyebk0a/aidaptiv-log-storage?var-Error_Code=${__value.text}&orgId=1﻿"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 172
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "median#(-7day) /hr"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total error#(-7day)"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 164
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serviceId"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 177
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 46,
+      "interval": "24h",
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Prosuite Error Code",
+          "url": "https://confluence.phison.com:8443/display/AID/Prosuite+error+code"
+        },
+        {
+          "targetBlank": true,
+          "title": "MicroService Error Code",
+          "url": "https://confluence.phison.com:8443/pages/viewpage.action?pageId=721218378"
+        }
+      ],
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": [],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "import \"date\"\r\nimport \"join\"\r\nimport \"math\"\r\n\r\n// 定義時間範圍\r\nnow = now()\r\n// 定義近七天的時間範圍\r\nthisWeekStart = date.sub(d: 7d, from: now)\r\nthisWeekStop = now\r\n\r\n// 計算用戶框選的時間區間\r\nselectedRangeStart = v.timeRangeStart\r\nselectedRangeStop = v.timeRangeStop\r\n\r\n// 查詢本周的 error_count，先截斷時間為天，處理空值\r\nthis_week_counts_raw = from(bucket: \"phisonai\")\r\n  |> range(start: thisWeekStart, stop: thisWeekStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"level\"] == \"Error\")\r\n  |> filter(fn: (r) => r[\"flowId\"] !~ /(?i)test/)\r\n  |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n  |> map(fn: (r) => ({\r\n      _time: date.truncate(t: r._time, unit: 1h),\r\n      serviceId: if not exists r.serviceId then \"Empty\" else r.serviceId,\r\n      errorCode: if not exists r.errorCode then \"Empty\" else r.errorCode,\r\n      _value: r._value\r\n    }))\r\n  |> group(columns: [\"serviceId\", \"errorCode\", \"_time\"])\r\n  |> count()\r\n  |> keep(columns: [\"serviceId\", \"errorCode\", \"_time\", \"_value\"])\r\n  |> group()\r\n\r\n// 計算本周總數（按 serviceId 和 errorCode 分群）\r\nthis_week_totals = this_week_counts_raw\r\n  |> group(columns: [\"serviceId\", \"errorCode\"])\r\n  |> sum(column: \"_value\")\r\n  |> map(fn: (r) => ({\r\n      serviceId: r.serviceId,\r\n      errorCode: r.errorCode,\r\n      this_week_total: r._value\r\n    }))\r\n  |> keep(columns: [\"serviceId\", \"errorCode\", \"this_week_total\"])\r\n  |> group()\r\n\r\n// 計算本周中位數\r\nthis_week_medians = this_week_counts_raw\r\n  |> group(columns: [\"serviceId\", \"errorCode\"])\r\n  |> median()\r\n  |> map(fn: (r) => ({\r\n      serviceId: r.serviceId,\r\n      errorCode: r.errorCode,\r\n      this_week_median: if not exists r._value then 0.0 else math.round(x: r._value * 10.0 / 10.0)\r\n    }))\r\n  |> keep(columns: [\"serviceId\", \"errorCode\", \"this_week_median\"])\r\n  |> group()\r\n\r\n// 合併本周總數和中位數\r\nthis_week_counts = join.left(\r\n  left: this_week_totals,\r\n  right: this_week_medians,\r\n  on: (l, r) => l.serviceId == r.serviceId and l.errorCode == r.errorCode,\r\n  as: (l, r) => ({\r\n    serviceId: l.serviceId,\r\n    errorCode: l.errorCode,\r\n    this_week_total: l.this_week_total,\r\n    this_week_median: if not exists r.this_week_median then 0.0 else r.this_week_median\r\n  })\r\n)\r\n\r\n// 查詢用戶框選時間區間的Template\r\nselected_range_counts_Template = from(bucket: \"phisonai\")\r\n  |> range(start: selectedRangeStart, stop: selectedRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n  |> filter(fn: (r) => r[\"level\"] == \"Error\")\r\n  |> filter(fn: (r) => r[\"flowId\"] !~ /(?i)test/)\r\n  |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n\r\n// 查詢用戶框選時間區間的 error_count，先截斷時間為天，處理空值\r\nselected_range_counts_raw = selected_range_counts_Template\r\n  |> map(fn: (r) => ({\r\n      _time: date.truncate(t: r._time, unit: 1h),\r\n      serviceId: if not exists r.serviceId then \"Empty\" else r.serviceId,\r\n      errorCode: if not exists r.errorCode then \"Empty\" else r.errorCode,\r\n      _value: r._value\r\n    }))\r\n  |> group(columns: [\"serviceId\", \"errorCode\", \"_time\"])\r\n  |> count()\r\n  |> keep(columns: [\"serviceId\", \"errorCode\", \"_time\", \"_value\"])\r\n  |> group()\r\n\r\n// 計算框選區間中位數，確保保留欄位\r\nselected_range_medians = selected_range_counts_raw\r\n  |> group(columns: [\"serviceId\", \"errorCode\"])\r\n  |> median()\r\n  |> map(fn: (r) => ({\r\n      serviceId: r.serviceId,\r\n      errorCode: r.errorCode,\r\n      selected_range_median: if not exists r._value then 0.0 else math.round(x: r._value * 10.0 / 10.0)\r\n    }))\r\n  |> keep(columns: [\"serviceId\", \"errorCode\", \"selected_range_median\"])\r\n  |> group()\r\n\r\n// 如果 selected_range_medians 為空，生成一個默認空表\r\ndefault_medians = selected_range_counts_Template\r\n  |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n  |> aggregateWindow(every: 1h, fn: count, createEmpty: true)\r\n  |> map(fn: (r) => ({\r\n      serviceId: if not exists r.serviceId then \"Empty\" else r.serviceId,\r\n      errorCode: if not exists r.errorCode then \"Empty\" else r.errorCode,\r\n      selected_range_median: 0.0\r\n    }))\r\n  |> group(columns: [\"serviceId\", \"errorCode\"])\r\n  |> keep(columns: [\"serviceId\", \"errorCode\", \"selected_range_median\"])\r\n  |> group()\r\n\r\n// 合併 selected_range_medians 和 default_medians\r\nselected_range_medians_with_default = union(tables: [selected_range_medians, default_medians])\r\n  |> group(columns: [\"serviceId\", \"errorCode\"])\r\n  |> reduce(\r\n      fn: (r, accumulator) => ({\r\n        serviceId: r.serviceId,\r\n        errorCode: r.errorCode,\r\n        selected_range_median: if r.selected_range_median > 0.0 then r.selected_range_median else accumulator.selected_range_median\r\n      }),\r\n      identity: {serviceId: \"\", errorCode: \"\", selected_range_median: 0.0}\r\n    )\r\n  |> keep(columns: [\"serviceId\", \"errorCode\", \"selected_range_median\"])\r\n  |> group()\r\n\r\n// 合併本周數據和框選區間中位數\r\nfinal_result = join.left(\r\n  left: this_week_counts,\r\n  right: selected_range_medians_with_default,\r\n  on: (l, r) => l.serviceId == r.serviceId and l.errorCode == r.errorCode,\r\n  as: (l, r) => ({\r\n    serviceId: l.serviceId,\r\n    errorCode: l.errorCode,\r\n    this_week_total: l.this_week_total,\r\n    this_week_median: l.this_week_median,\r\n    selected_range_median: if not exists r.selected_range_median then 0.0 else r.selected_range_median\r\n  })\r\n)\r\n|> map(fn: (r) => ({\r\n  serviceId: r.serviceId,\r\n  errorCode: r.errorCode,\r\n  this_week_total: r.this_week_total,\r\n  this_week_median: r.this_week_median,\r\n  selected_range_median: r.selected_range_median,\r\n  trend: if r.this_week_median - r.selected_range_median > 0.0 then \"Increased\"\r\n        else if r.this_week_median - r.selected_range_median < 0.0 then \"Decreased\"\r\n        else \"No Change\"\r\n}))\r\n|> sort(columns: [\"this_week_total\"], desc: true)\r\n|> group()\r\n|> yield()",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Code Summary",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "_time": true,
+              "avg_diff": true,
+              "count_diff": true,
+              "median_diff": true,
+              "selected_range_total": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "errorCode": 1,
+              "selected_range_median": 5,
+              "serviceId": 0,
+              "this_week_median": 4,
+              "this_week_total": 3,
+              "trend": 2
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.5,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 6,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": []
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 50,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "import \"date\"\r\nfrom(bucket: \"phisonai\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\")\r\n |> filter(fn: (r) => r[\"level\"] == \"Error\")\r\n |> filter(fn: (r) => r[\"flowId\"] !~ /(?i)test/)\r\n |> filter(fn: (r) => r.serviceId =~ /^${Service:regex}$/)\r\n |> filter(fn: (r) => if \"${Error_Code:regex}\" == \"Empty\" then not exists r.errorCode else r.errorCode =~ /^${Error_Code:regex}$/)\r\n |> map(fn: (r) => {\r\n     // 按天截斷時間\r\n     dailyTime = date.truncate(t: r._time, unit: 1d)\r\n     // 計算每條記錄的星期幾\r\n     recordWeekday = date.weekDay(t: r._time)\r\n     // 計算該記錄的星期一時間作為分組鍵\r\n     groupTime = date.sub(d: duration(v: string(v: recordWeekday - 1) + \"d\"), from: dailyTime)\r\n     return {r with daily_time: dailyTime, group_time: groupTime, _time: r._time} // 保留原始 _time\r\n   })\r\n |> group(columns: [\"group_time\"])\r\n |> count()\r\n |> map(fn: (r) => ({\r\n     _time: r.group_time, // 使用 group_time 作為每週的代表時間（星期一）\r\n     error_count: r._value // 每週的總錯誤數量\r\n   }))\r\n |> group()",
+          "refId": "A"
+        }
+      ],
+      "title": "Error# Code Monitor (per week)",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "serviceId": false
+            },
+            "includeByName": {},
+            "indexByName": {
+              "_time": 0,
+              "errorCode": 1,
+              "error_count": 3,
+              "serviceId": 2
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 40,
+  "tags": [
+    "Public"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P3C6603E967DC8568"
+        },
+        "definition": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(\r\n    bucket: \"phisonai\",\r\n    tag: \"serviceId\",\r\n    predicate: (r) => r._measurement == \"n_log\",\r\n    start: v.timeRangeStart,\r\n    stop:v.timeRangeStop\r\n)",
+        "includeAll": true,
+        "name": "Service",
+        "options": [],
+        "query": {
+          "query": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(\r\n    bucket: \"phisonai\",\r\n    tag: \"serviceId\",\r\n    predicate: (r) => r._measurement == \"n_log\",\r\n    start: v.timeRangeStart,\r\n    stop:v.timeRangeStop\r\n)",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "/node_exporter",
+          "value": "/node_exporter"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(node_uname_info{job=\"$job\"},instance)",
+        "hide": 2,
+        "includeAll": false,
+        "label": "Host",
+        "name": "node",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(node_uname_info{job=\"$job\"},instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": "[^ \\t\\n]+",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P3C6603E967DC8568"
+        },
+        "definition": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column: \"flowId\")\r\n  |> map(fn: (r) => ({flowId: r.flowId}))",
+        "description": "",
+        "includeAll": true,
+        "label": "Flow ID",
+        "name": "FlowID",
+        "options": [],
+        "query": {
+          "maxDataPoints": 50000,
+          "query": "from(bucket: \"phisonai\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"n_log\" and r[\"flowId\"] != \"\")\r\n  |> group(columns: [\"flowId\"], mode: \"by\")\r\n  |> unique(column: \"flowId\")\r\n  |> map(fn: (r) => ({flowId: r.flowId}))",
+          "refId": "InfluxVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "sort": 2,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(nvidia_gpu_info,cardMinor)",
+        "includeAll": true,
+        "multi": true,
+        "name": "GPU",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(nvidia_gpu_info,cardMinor)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "docker-containers",
+          "value": "docker-containers"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(node_uname_info,job)",
+        "hide": 2,
+        "includeAll": false,
+        "label": "Job",
+        "name": "job",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(node_uname_info,job)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "Prometheus",
+          "value": "PBFA97CFB590B2093"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "label": "Datasource",
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "text": "InferenceModel4",
+          "value": "InferenceModel4"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(model_name)",
+        "includeAll": false,
+        "label": "Model Code Name",
+        "name": "model_name",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(model_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P3C6603E967DC8568"
+        },
+        "definition": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(\r\n    bucket: \"phisonai\",\r\n    tag: \"model\",\r\n    predicate: (r) => r._measurement == \"vllm_loading\",\r\n    start: v.timeRangeStart,\r\n    stop:v.timeRangeStop\r\n)",
+        "includeAll": true,
+        "label": "Model Name",
+        "name": "Model",
+        "options": [],
+        "query": {
+          "query": "import \"influxdata/influxdb/v1\"\r\nv1.tagValues(\r\n    bucket: \"phisonai\",\r\n    tag: \"model\",\r\n    predicate: (r) => r._measurement == \"vllm_loading\",\r\n    start: v.timeRangeStart,\r\n    stop:v.timeRangeStop\r\n)"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "$__all",
+          "value": "$__all"
+        },
+        "includeAll": true,
+        "label": "Error Code",
+        "name": "Error_Code",
+        "options": [],
+        "query": "",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "系統異常分析--簡易版(PS.)",
+  "uid": "aetd69b4mdxc0c",
+  "version": 7,
+  "weekStart": ""
+}

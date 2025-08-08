@@ -47,6 +47,9 @@ datasources:
   access: proxy
   editable: true
   uid: P8D6546721A1D106C
+  jsonData:
+    serviceMap:
+      datasourceUid: PBFA97CFB590B2093
   
 - name: postgresql
   type: grafana-postgresql-datasource
