@@ -8,7 +8,7 @@ services:
     container_name: grafana
     networks:
       - phison-network
-    restart: always
+    restart: 'on-failure:5'
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWD}
@@ -50,10 +50,16 @@ services:
     volumes:
       - ./config/tempo/tempo.yaml:/etc/tempo.yaml
       - ${TEMPO_DATA}:/var/tempo
-    restart: always
+    restart: 'on-failure:5'
     env_file: 'grafana-config.env'
     depends_on:
       - tempo_init
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:3200/ready']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   otel-collector:
     image: ${OTEL_CONTAINER_IMAGE}
